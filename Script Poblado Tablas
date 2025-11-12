@@ -1,0 +1,44 @@
+USE `mydb`;
+
+-- 1. Poblar la tabla de Funcionarios
+-- ---------------------------------
+INSERT INTO Funcionarios (tipo_identificacion,
+numero_identificacion, nombres, apellidos, estado_civil, sexo, direccion,
+telefono, fecha_nacimiento) VALUES
+('Cédula de Ciudadanía', '100000001', 'Juan', 'Pérez',
+'Soltero', 'Masculino', 'Calle 1 # 1-1', '3001111111', '1990-05-15 00:00:00'),
+('Cédula de Ciudadanía', '100000002', 'María', 'Gómez',
+'Casado', 'Femenino', 'Carrera 2 # 2-2', '3002222222', '1985-11-20 00:00:00'),
+('Tarjeta de Identidad', '200000003', 'Carlos', 'Rodríguez',
+'Soltero', 'Masculino', 'Avenida 3 # 3-3', '3003333333', '2001-01-10 00:00:00');
+-- Nota: 'fecha_nacimiento' es DATETIME, por eso se ajusta el formato incluyendo la hora '00:00:00'.
+
+-- -----------------------------------------------------------------
+-- 2. Obtener los IDs de los funcionarios recién insertados
+-- Esto es crucial porque el id_funcionario es AUTO_INCREMENT
+SET @id_juan = (SELECT id_funcionario FROM Funcionarios
+WHERE numero_identificacion = '100000001');
+SET @id_maria = (SELECT id_funcionario FROM Funcionarios
+WHERE numero_identificacion = '100000002');
+SET @id_carlos = (SELECT id_funcionario FROM Funcionarios
+WHERE numero_identificacion = '200000003');
+
+-- --------------------------------------
+-- 3. Poblar la tabla de GrupoFamiliar
+-- --------------------------------------
+-- Columnas requeridas: nombre_miembro, apellido_miembro, parentesco, Funcionarios_id_funcionario
+INSERT INTO GrupoFamiliar (nombre_miembro,
+apellido_miembro, parentesco, Funcionarios_id_funcionario) VALUES
+('Ana', 'López', 'Pareja', @id_juan), 
+('Pedro', 'Pérez', 'Hijo', @id_juan),
+('Luis', 'Gómez', 'Cónyuge', @id_maria)
+('Sofía', 'Gómez', 'Hija', @id_maria);
+
+-- ------------------------------------------------
+-- 4. Poblar la tabla de InformacionAcademica
+-- ------------------------------------------------
+INSERT INTO InformacionAcademica (universidad,
+nivel_estudio, titulo_estudio, Funcionarios_id_funcionario) VALUES
+('Universidad Nacional', 'Pregrado', 'Ingeniería de Sistemas', @id_juan),
+('Universidad de Antioquia', 'Maestría', 'Gestión de Proyectos', @id_juan),
+('Universidad Pontificia Bolivariana', 'Pregrado', 'Administración de Empresas', @id_maria);

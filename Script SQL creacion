@@ -1,0 +1,76 @@
+
+-- MySQL Workbench Forward Engineering
+
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
+
+-- -----------------------------------------------------
+-- Schema mydb
+-- -----------------------------------------------------
+
+-- -----------------------------------------------------
+-- Schema mydb
+-- -----------------------------------------------------
+CREATE SCHEMA IF NOT EXISTS `mydb` DEFAULT CHARACTER SET utf8 ;
+USE `mydb` ;
+
+-- -----------------------------------------------------
+-- Table `mydb`.`Funcionarios`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb`.`Funcionarios` (
+  `id_funcionario` INT NOT NULL AUTO_INCREMENT,
+  `tipo_identificacion` VARCHAR(45) NOT NULL,
+  `numero_identificacion` VARCHAR(45) NOT NULL,
+  `nombres` VARCHAR(45) NOT NULL,
+  `apellidos` VARCHAR(45) NOT NULL,
+  `estado_civil` ENUM('Soltero', 'Casado', 'Separado', 'Viudo', 'Unión Libre') NOT NULL,
+  `sexo` ENUM('Masculino', 'Femenino') NOT NULL,
+  `direccion` VARCHAR(45) NOT NULL,
+  `telefono` VARCHAR(45) NOT NULL,
+  `fecha_nacimiento` DATETIME NOT NULL,
+  PRIMARY KEY (`id_funcionario`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `mydb`.`GrupoFamiliar`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb`.`GrupoFamiliar` (
+  `id_miembro_familiar` INT NOT NULL AUTO_INCREMENT,
+  `nombre_miembro` VARCHAR(45) NOT NULL,
+  `apellido_miembro` VARCHAR(45) NOT NULL,
+  `parentesco` VARCHAR(45) NOT NULL,
+  `Funcionarios_id_funcionario` INT NOT NULL,
+  PRIMARY KEY (`id_miembro_familiar`, `Funcionarios_id_funcionario`),
+  INDEX `fk_GrupoFamiliar_Funcionarios_idx` (`Funcionarios_id_funcionario` ASC) VISIBLE,
+  CONSTRAINT `fk_GrupoFamiliar_Funcionarios`
+    FOREIGN KEY (`Funcionarios_id_funcionario`)
+    REFERENCES `mydb`.`Funcionarios` (`id_funcionario`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `mydb`.`InformacionAcademica`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb`.`InformacionAcademica` (
+  `id_estudio` INT NOT NULL AUTO_INCREMENT,
+  `universidad` VARCHAR(45) NOT NULL,
+  `nivel_estudio` ENUM("Pregrado", "Maestría", "Doctorado") NOT NULL,
+  `titulo_estudio` VARCHAR(45) NOT NULL,
+  `Funcionarios_id_funcionario` INT NOT NULL,
+  PRIMARY KEY (`id_estudio`, `Funcionarios_id_funcionario`),
+  INDEX `fk_InformacionAcademica_Funcionarios1_idx` (`Funcionarios_id_funcionario` ASC) VISIBLE,
+  CONSTRAINT `fk_InformacionAcademica_Funcionarios1`
+    FOREIGN KEY (`Funcionarios_id_funcionario`)
+    REFERENCES `mydb`.`Funcionarios` (`id_funcionario`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
